@@ -37,6 +37,7 @@ LOG_FILE="$LOG_DIR/${SAVE_LOG_NUM}.log" # 로그 파일 경로
 ############################################ 함수
 FUNC_NAMES=(
   "generate_AA"
+  "generate_CQ"
   "hf_dataset_io"
 )
 

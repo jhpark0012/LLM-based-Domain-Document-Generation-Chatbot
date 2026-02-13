@@ -19,6 +19,7 @@ import PIL.Image
 
 import my_parser
 import generate_AA
+import generate_CQ
 import hf_dataset_io
 
 # Basic Settings
@@ -57,7 +58,7 @@ def run_generate_AA(args):
 
     case_name_list = args.case_name_list.split(" ")
 
-    origin_AA_path = DATA_ROOT / "Origin_Ans"
+    origin_Ans_path = DATA_ROOT / "Origin_Ans"
     for case_name in tqdm(case_name_list):
         print()
         print('==============================================')
@@ -65,7 +66,7 @@ def run_generate_AA(args):
         print('==============================================')
         print()
 
-        df = pd.read_excel(origin_AA_path / f'{case_name}.xlsx')
+        df = pd.read_excel(origin_Ans_path / f'{case_name}.xlsx')
         df.columns = df.columns.str.strip()
 
         df_aa = pd.DataFrame(columns=[
@@ -136,7 +137,111 @@ def run_generate_AA(args):
 
 
 def run_generate_CQ(args):
-    pass
+
+    gen_sys, gen_user = load_prompts("GEN_CQ_prompt")
+    eval_sys, eval_user = load_prompts("Eval_CQ_prompt")
+    regen_sys, regen_user = load_prompts("Re_Gen_CQ_prompt")
+
+    case_name_list = args.case_name_list.split(" ")
+    Ambig_Ans_path = DATA_ROOT / "Ambig_Ans"
+
+    app = generate_CQ.build_cq_graph()
+
+    for case_name in tqdm(case_name_list):
+
+        start = time.time()
+        print()
+        print('==============================================')
+        print(f'Case : {case_name}')
+        print('==============================================')
+        print()
+
+        df = pd.read_csv(Ambig_Ans_path / f'{case_name}_AA.csv')
+        df.columns = df.columns.str.strip()
+
+        df_cq = pd.DataFrame(columns=[
+            '번호', '구분', '작성사항', '작성대상', '답변',
+            'ambig_ans', 'lv', 'cq', 'iter', 'final_report'
+        ])
+
+        len_df = len(df)
+        for idx in tqdm(range(len_df)):
+            clear_answer = df.loc[idx, '답변']
+
+            # question 만들기 (작성대상 컬럼 공백/이름 혼재 대비해서 strip 컬럼 사용 권장)
+            question = ''
+            for i, content in enumerate(['구분', '작성사항', '작성대상']):
+                question += content + ': '
+                question += str(df.loc[idx, content])
+                if i < 2:
+                    question += ', '
+
+            print(f'\nQuestion {idx}: {question}')
+            print(f'Answer : {clear_answer}\n')
+
+            for lv in ['lv1', 'lv2', 'lv3']:
+                print(lv)
+                aa_answer = df.loc[idx, lv]
+                print(aa_answer)
+
+                # 그래프 initial_state 구성
+                initial_state = {
+                    "case_name": case_name,
+                    "question": question,
+                    "clear_answer": clear_answer,
+                    "aa_answer": aa_answer,
+
+                    # loop/params
+                    "cq_num": args.cq_num,
+                    "judge_num": args.judge_num,
+                    "max_iters": args.refine_num,
+                    "threshold": args.cq_score_threshold,
+
+                    # models/temps
+                    "gpt_ver_gen": "gpt-4o-mini",
+                    "gpt_ver_eval": "gpt-5-mini",
+                    "gen_temperature": args.gen_temperature,
+                    "eval_temperature": args.eval_temperature,
+
+                    # prompts
+                    "gen_system_prompt": gen_sys,
+                    "gen_user_prompt": gen_user,
+                    "eval_system_prompt": eval_sys,
+                    "eval_user_prompt": eval_user,
+                    "regen_system_prompt": regen_sys,
+                    "regen_user_prompt": regen_user,
+
+                    "iter": 0,
+                }
+
+                final_state = initial_state
+                for state in app.stream(initial_state, stream_mode="values"):
+                    if state["iter"] > final_state["iter"]:
+                        print(f"State (Iter {state['iter']}):\n{state}\n\n\n")
+                    final_state = state
+
+                    final_rows = final_state.get("final_rows", [])
+
+                for r in final_rows:
+                    result_ = df.loc[idx, ['번호', '구분',
+                                           '작성사항', '작성대상', '답변']].tolist()
+
+                    result_.append(aa_answer)                 # ambig_ans
+                    result_.append(lv)                        # lv
+                    result_.append(r.get("final_cq", ""))     # cq
+                    result_.append(r.get("iters_used", 0))    # iter
+                    result_.append(r.get("final_report", {}))
+
+                    df_cq.loc[len(df_cq)] = result_
+
+        end = time.time()
+        print(f'실행 시간 : {end-start}')
+
+        os.makedirs(DATA_ROOT / "Golden_CQ", exist_ok=True)
+        df_cq.to_csv(DATA_ROOT / "Golden_CQ" /
+                     f'{case_name}_CQ.csv', index=False)
+
+        break
 
 
 def make_train_val_test_data(args):
@@ -166,6 +271,7 @@ if __name__ == "__main__":
 
     func_map = {
         "generate_AA": run_generate_AA,
+        "generate_CQ": run_generate_CQ,
         "hf_dataset_io": run_hf_dataset_io,
     }
 
