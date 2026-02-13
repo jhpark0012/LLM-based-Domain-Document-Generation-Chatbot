@@ -124,8 +124,7 @@ Re_Gen_AA_prompt:
     명확한 작성 결과 : {clear_answer}
     평가 결과 : {eval_report}
 
-
-CQ_prompt:
+GEN_CQ_prompt:
   system: |
     ### 역할(Role)
     - 당신은 **민사소송 소장 작성 도우미**입니다.
@@ -246,7 +245,7 @@ Eval_CQ_prompt:
     애매한 답변 : {aa_answer}
     모델이 만든 CQ : {model_cq}
 
-ReCQ_prompt:
+Re_Gen_CQ_prompt:
   system: |
     ### 역할(Role)
     - 당신은 **민사소송 소장 작성 도우미**입니다.

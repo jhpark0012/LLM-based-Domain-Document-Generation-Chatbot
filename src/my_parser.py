@@ -16,6 +16,10 @@ def parse_args():
                         help='Input Max Number of Refinement')
     parser.add_argument('--judge_num', type=int,  default=3,
                         help='Input Number of Judge model')
+    parser.add_argument('--cq_num', type=int,  default=3,
+                        help='Input Number of CQ')
+    parser.add_argument('--cq_score_threshold', type=int,  default=8,
+                        help='Input Min score of CQ Quality')
     parser.add_argument('--gen_temperature', type=float,  default=0.7,
                         help='Input Temperature of Generative Model (GPT-4o-mini)')
     parser.add_argument('--eval_temperature', type=float,  default=0,
