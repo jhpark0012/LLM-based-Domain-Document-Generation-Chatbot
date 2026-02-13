@@ -252,7 +252,7 @@ def route_after_evaluate(state: AAState):
     return "regenerate"
 
 
-def build_graph():
+def build_aa_graph():
     workflow = StateGraph(AAState)
 
     workflow.add_node("generate", node_generate)

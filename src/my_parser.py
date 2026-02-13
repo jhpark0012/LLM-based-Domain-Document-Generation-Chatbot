@@ -21,11 +21,13 @@ def parse_args():
     parser.add_argument('--cq_score_threshold', type=int,  default=8,
                         help='Input Min score of CQ Quality')
     parser.add_argument('--gen_temperature', type=float,  default=0.7,
-                        help='Input Temperature of Generative Model (GPT-4o-mini)')
+                        help='Input Temperature of Generative Model')
     parser.add_argument('--eval_temperature', type=float,  default=0,
-                        help='Input Temperature of Evaluation Model (GPT-5-mini)')
+                        help='Input Temperature of Evaluation Model')
 
-    parser.add_argument('--user_num', type=int,  default=1,
+    parser.add_argument('--user_num_list', type=str,
                         help='Input user num')
+    parser.add_argument('--method', type=str,  choices=["SFT", "Fewshot5", "CoT"], default="SFT",
+                        help='Input Method of Simulation')
 
     return parser.parse_known_args()[0]

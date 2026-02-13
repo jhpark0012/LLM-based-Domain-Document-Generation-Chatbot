@@ -7,7 +7,7 @@ BASE_DIR="/workspace/experiment/Clarifying-Ambiguity-Project"
 LOG_DIR="$BASE_DIR/logs/"
 mkdir -p "$LOG_DIR"
 
-case_name_list=(
+CASE_NAME_LIST=(
   '건물명도및손해배상'
   '건물인도청구_국가원고'
   '건물철거'
@@ -26,10 +26,12 @@ case_name_list=(
   '채권양도금2'
 )
 
+USER_NUM_LIST=$(seq 1 11)
 ############################################ Arguments 설정
 LOAD_FILE="Ambig_Ans"
 HF_PATH="$BASE_DIR/data/$LOAD_FILE/"
 HF_ACTION="pull"
+METHOD="SFT"
 
 SAVE_LOG_NUM=$(date +%Y%m%d_%H%M%S) # 딱 실행했을때의 시간
 LOG_FILE="$LOG_DIR/${SAVE_LOG_NUM}.log" # 로그 파일 경로
@@ -39,6 +41,7 @@ FUNC_NAMES=(
   "generate_AA"
   "generate_CQ"
   "data_split"
+  "simulation"
   "hf_dataset_io"
 )
 
@@ -93,9 +96,11 @@ done
 
 {
 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 python -u "$BASE_DIR/src/main.py" \
-  --case_name_list "${case_name_list[*]}" \
+  --case_name_list "${CASE_NAME_LIST[*]}" \
   --hf_path "$HF_PATH" \
   --hf_action "$HF_ACTION" \
   --func_list "${FUNC_LIST[@]}" \
+  --user_num_list "${USER_NUM_LIST[*]}" \
+  --method "$METHOD" \
 
 } 2>&1 | tee "$LOG_FILE"

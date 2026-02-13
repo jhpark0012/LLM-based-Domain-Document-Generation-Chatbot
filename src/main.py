@@ -21,6 +21,7 @@ import my_parser
 import generate_AA
 import generate_CQ
 import data_split
+import simulation
 import hf_dataset_io
 
 # Basic Settings
@@ -91,7 +92,7 @@ def run_generate_AA(args):
             print()
 
             # 애매한 답변 생성 process
-            app = generate_AA.build_graph()
+            app = generate_AA.build_aa_graph()
             initial_state = {
                 "case_name": case_name,
                 "question": question,
@@ -246,22 +247,17 @@ def run_generate_CQ(args):
 
 
 def run_data_split(args):
-    doc_template = pd.read_excel(BASE_DIR / 'data/답변데이터양식.xlsx')
+    doc_template = pd.read_excel(DATA_ROOT / '답변데이터양식.xlsx')
     doc_template.columns = doc_template.columns.str.strip()
 
-    path_dict = {'origin_ans_path': BASE_DIR / 'data/Origin_Ans',
-                 'golden_cq_path': BASE_DIR / 'data/Golden_CQ'}
+    path_dict = {'origin_ans_path': DATA_ROOT / 'Origin_Ans',
+                 'golden_cq_path': DATA_ROOT / 'Golden_CQ'}
 
-    # train_case_name_list = ['사해행위취소', '손해배상_불법행위', '대여금_법인', '부당등기말소', '채권양도금', '용역대금',
-    #                         '임대차보증금청구', '손해배상_미성년자원고', '건물인도청구_국가원고', '건물철거', '저당권말소', '채권양도금2']
+    train_case_name_list = ['사해행위취소', '손해배상_불법행위', '대여금_법인', '부당등기말소', '채권양도금', '용역대금',
+                            '임대차보증금청구', '손해배상_미성년자원고', '건물인도청구_국가원고', '건물철거', '저당권말소', '채권양도금2']
 
-    # val_case_name_list = ['공유물분할', '임대차보증금반환_선정당사자']
-    # test_case_name_list = ['건물명도및손해배상', '공사대금청구의소']
-
-    train_case_name_list = ['건물명도및손해배상']
-
-    val_case_name_list = ['건물명도및손해배상']
-    test_case_name_list = ['건물명도및손해배상']
+    val_case_name_list = ['공유물분할', '임대차보증금반환_선정당사자']
+    test_case_name_list = ['건물명도및손해배상', '공사대금청구의소']
 
     train, _ = data_split.make_dataset(
         doc_template, train_case_name_list, path_dict)
@@ -270,8 +266,8 @@ def run_data_split(args):
     test, test_gold = data_split.make_dataset(
         doc_template, test_case_name_list, path_dict)
 
-    final_data_csv_path = BASE_DIR / 'data/Final_data/csv_files'
-    final_data_jsonl_path = BASE_DIR / 'data/Final_data/jsonl_files'
+    final_data_csv_path = DATA_ROOT / 'Final_data/csv_files'
+    final_data_jsonl_path = DATA_ROOT / 'Final_data/jsonl_files'
     os.makedirs(final_data_csv_path, exist_ok=True)
     os.makedirs(final_data_jsonl_path, exist_ok=True)
 
@@ -298,8 +294,122 @@ def run_data_split(args):
             f.write(json.dumps(item, ensure_ascii=False) + "\n")
 
 
-def run_document_writing_simulation(args):
-    pass
+def run_simulation(args):
+    def run_one_row(
+        app,  # graph.compile() 결과(=app)로 받는 걸 추천. graph라도 stream 지원하면 동일
+        question: str, user_answer: str, golden_answer: str, df_history: pd.DataFrame, max_hops: int,
+        gpt_ver_chatbot: str, gpt_ver_user_agent: str, chatbot_temperature: float, user_agent_temperature: float,
+        chatbot_system_prompt: str, chatbot_user_prompt: str, user_agent_system_prompt: str, user_agent_user_prompt: str
+    ):
+        initial_state: simulation.SimState = {
+            "question": question,
+            "user_answer": user_answer,
+            "user_answer_original": user_answer,
+            "golden_answer": golden_answer,
+            "df_history": df_history.to_string(index=False),
+
+            "hops": 0,
+            "max_hops": max_hops,
+            "judgment": "",
+
+            "selection_list": [],
+            "excluded_options": [],
+            "final_answer": None,
+
+            "gpt_ver_chatbot": gpt_ver_chatbot,
+            "gpt_ver_user_agent": gpt_ver_user_agent,
+            "chatbot_temperature": chatbot_temperature,
+            "user_agent_temperature": user_agent_temperature,
+
+            "chatbot_system_prompt": chatbot_system_prompt,
+            "chatbot_user_prompt": chatbot_user_prompt,
+
+            "user_agent_system_prompt": user_agent_system_prompt,
+            "user_agent_user_prompt": user_agent_user_prompt,
+        }
+
+        final_state = initial_state
+
+        # hops 증가할 때만 출력
+        for state in app.stream(initial_state, stream_mode="values"):
+            if state["hops"] > final_state["hops"]:
+                print(f"State (Hops {state['hops']}):\n{state}\n\n")
+            final_state = state
+
+        return (
+            final_state["final_answer"],
+            final_state["hops"],
+            final_state.get("excluded_options", [])
+        )
+
+    if args.method == 'SFT':
+        gpt_ver_chatbot = 'ft:gpt-4o-mini-2024-07-18:personal:markrv1:CXjmhXS7'
+    else:
+        gpt_ver_chatbot = 'gpt-4o-mini'
+
+    chatbot_system_prompt, chatbot_user_prompt = load_prompts(
+        f'{args.method}_prompt')
+    user_agent_system_prompt, user_agent_user_prompt = load_prompts(
+        'User_Agent_prompt')
+
+    user_num_list = args.user_num_list.split("\n")
+
+    save_dir = DATA_ROOT / f'Student_Data/simulation/{args.method}/'
+    os.makedirs(save_dir, exist_ok=True)
+
+    for user_num in user_num_list:
+        user_num = int(user_num)
+        df_user = pd.read_excel(
+            DATA_ROOT / f'Student_Data/Ambig_Ans/{user_num}번.xlsx')
+        df_user = df_user.iloc[3:, :].reset_index(drop=True)
+        df_golden = pd.read_excel(
+            DATA_ROOT / f'Student_Data/Golden_Ans/{user_num}번_정답.xlsx')
+
+        df_res = df_user.copy()
+        df_res['Golden Answer'] = df_golden['답변']
+
+        final_answer_list = []
+        hops_list = []
+
+        for idx in tqdm(range(len(df_user)), desc="Simulation Start"):
+            user_answer = df_user['답변'].iloc[idx]
+            golden_answer = df_golden['답변'].iloc[idx]
+            content_list = df_user[['구분', '작성사항', '작성대상 ']].iloc[idx].tolist()
+
+            question = f'Q{idx}: ({content_list[2]}) 부분의 {content_list[1]} 작성 내용입니다. {content_list[0]}에 대해서 입력해주세요'
+
+            print(f'\n[{idx}] Question : {question}')
+
+            df_history = df_res[['구분', '작성사항',
+                                '작성대상 ', 'Golden Answer']].iloc[:idx]
+
+            app = simulation.build_simul_graph()
+            final_answer, hops, _excluded = run_one_row(
+                app=app,
+                question=question,
+                user_answer=user_answer,
+                golden_answer=golden_answer,
+                df_history=df_history,
+                max_hops=args.refine_num,
+                gpt_ver_chatbot=gpt_ver_chatbot,
+                gpt_ver_user_agent='gpt-4o-mini',
+                chatbot_temperature=args.gen_temperature,
+                user_agent_temperature=args.eval_temperature,
+                chatbot_system_prompt=chatbot_system_prompt,
+                chatbot_user_prompt=chatbot_user_prompt,
+                user_agent_system_prompt=user_agent_system_prompt,
+                user_agent_user_prompt=user_agent_user_prompt,
+
+            )
+
+            final_answer_list.append(final_answer)
+            hops_list.append(hops)
+
+        df_res['Final Answer'] = final_answer_list
+        df_res['Hops'] = hops_list
+        df_res.to_csv(save_dir / f'df_{user_num}.csv', index=False)
+
+        break
 
 
 def run_hf_dataset_io(args):
@@ -324,6 +434,7 @@ if __name__ == "__main__":
         "generate_CQ": run_generate_CQ,
         "hf_dataset_io": run_hf_dataset_io,
         "data_split": run_data_split,
+        "simulation": run_simulation
     }
 
     func_list = args.func_list.split("/")
