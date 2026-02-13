@@ -38,6 +38,7 @@ LOG_FILE="$LOG_DIR/${SAVE_LOG_NUM}.log" # 로그 파일 경로
 FUNC_NAMES=(
   "generate_AA"
   "generate_CQ"
+  "data_split"
   "hf_dataset_io"
 )
 

@@ -20,6 +20,7 @@ import PIL.Image
 import my_parser
 import generate_AA
 import generate_CQ
+import data_split
 import hf_dataset_io
 
 # Basic Settings
@@ -244,8 +245,57 @@ def run_generate_CQ(args):
         break
 
 
-def make_train_val_test_data(args):
-    pass
+def run_data_split(args):
+    doc_template = pd.read_excel(BASE_DIR / 'data/답변데이터양식.xlsx')
+    doc_template.columns = doc_template.columns.str.strip()
+
+    path_dict = {'origin_ans_path': BASE_DIR / 'data/Origin_Ans',
+                 'golden_cq_path': BASE_DIR / 'data/Golden_CQ'}
+
+    # train_case_name_list = ['사해행위취소', '손해배상_불법행위', '대여금_법인', '부당등기말소', '채권양도금', '용역대금',
+    #                         '임대차보증금청구', '손해배상_미성년자원고', '건물인도청구_국가원고', '건물철거', '저당권말소', '채권양도금2']
+
+    # val_case_name_list = ['공유물분할', '임대차보증금반환_선정당사자']
+    # test_case_name_list = ['건물명도및손해배상', '공사대금청구의소']
+
+    train_case_name_list = ['건물명도및손해배상']
+
+    val_case_name_list = ['건물명도및손해배상']
+    test_case_name_list = ['건물명도및손해배상']
+
+    train, _ = data_split.make_dataset(
+        doc_template, train_case_name_list, path_dict)
+    val, _ = data_split.make_dataset(
+        doc_template, val_case_name_list, path_dict)
+    test, test_gold = data_split.make_dataset(
+        doc_template, test_case_name_list, path_dict)
+
+    final_data_csv_path = BASE_DIR / 'data/Final_data/csv_files'
+    final_data_jsonl_path = BASE_DIR / 'data/Final_data/jsonl_files'
+    os.makedirs(final_data_csv_path, exist_ok=True)
+    os.makedirs(final_data_jsonl_path, exist_ok=True)
+
+    train.to_csv(final_data_csv_path / 'train.csv', index=False)
+    val.to_csv(final_data_csv_path / 'val.csv', index=False)
+    test.to_csv(final_data_csv_path / 'test.csv', index=False)
+    test_gold.to_csv(final_data_csv_path /
+                     'test_gold.csv', index=False)
+
+    train_dataset = data_split.make_dataset_json(train)
+    val_dataset = data_split.make_dataset_json(val)
+    test_dataset = data_split.make_dataset_json(test)
+
+    with open(final_data_jsonl_path / "train_dataset.jsonl", "w", encoding="utf-8") as f:
+        for item in train_dataset:
+            f.write(json.dumps(item, ensure_ascii=False) + "\n")
+
+    with open(final_data_jsonl_path / "val_dataset.jsonl", "w", encoding="utf-8") as f:
+        for item in val_dataset:
+            f.write(json.dumps(item, ensure_ascii=False) + "\n")
+
+    with open(final_data_jsonl_path / "test_dataset.jsonl", "w", encoding="utf-8") as f:
+        for item in test_dataset:
+            f.write(json.dumps(item, ensure_ascii=False) + "\n")
 
 
 def run_document_writing_simulation(args):
@@ -273,6 +323,7 @@ if __name__ == "__main__":
         "generate_AA": run_generate_AA,
         "generate_CQ": run_generate_CQ,
         "hf_dataset_io": run_hf_dataset_io,
+        "data_split": run_data_split,
     }
 
     func_list = args.func_list.split("/")
