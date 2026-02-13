@@ -222,17 +222,17 @@ def run_generate_CQ(args):
 
                     final_rows = final_state.get("final_rows", [])
 
-                    for r in final_rows:
-                        result_ = df.loc[idx, ['번호', '구분',
-                                               '작성사항', '작성대상', '답변']].tolist()
+                for r in final_rows:
+                    result_ = df.loc[idx, ['번호', '구분',
+                                           '작성사항', '작성대상', '답변']].tolist()
 
-                        result_.append(aa_answer)                 # ambig_ans
-                        result_.append(lv)                        # lv
-                        result_.append(r.get("final_cq", ""))     # cq
-                        result_.append(r.get("iters_used", 0))    # iter
-                        result_.append(r.get("final_report", {}))
+                    result_.append(aa_answer)                 # ambig_ans
+                    result_.append(lv)                        # lv
+                    result_.append(r.get("final_cq", ""))     # cq
+                    result_.append(r.get("iters_used", 0))    # iter
+                    result_.append(r.get("final_report", {}))
 
-                        df_cq.loc[len(df_cq)] = result_
+                    df_cq.loc[len(df_cq)] = result_
 
         end = time.time()
         print(f'실행 시간 : {end-start}')
