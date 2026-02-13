@@ -134,8 +134,6 @@ def run_generate_AA(args):
         df_aa.to_csv(DATA_ROOT / "Ambig_Ans" /
                      f'{case_name}_AA.csv', index=False)
 
-        break
-
 
 def run_generate_CQ(args):
     pass

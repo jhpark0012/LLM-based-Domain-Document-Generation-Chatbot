@@ -27,10 +27,11 @@ case_name_list=(
 )
 
 ############################################ Arguments 설정
-SAVE_LOG_NUM=$(date +%Y%m%d_%H%M%S) # 딱 실행했을떄의 시간
-LOAD_LOG_NUM="20260210_062931"
-HF_PATH="$BASE_DIR/$LOAD_LOG_NUM/"
+LOAD_FILE="Ambig_Ans"
+HF_PATH="$BASE_DIR/data/$LOAD_FILE/"
 HF_ACTION="pull"
+
+SAVE_LOG_NUM=$(date +%Y%m%d_%H%M%S) # 딱 실행했을때의 시간
 LOG_FILE="$LOG_DIR/${SAVE_LOG_NUM}.log" # 로그 파일 경로
 
 ############################################ 함수
