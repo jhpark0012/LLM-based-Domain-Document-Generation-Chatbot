@@ -11,7 +11,8 @@ In legal domains such as civil complaints, users frequently provide vague answer
 Therefore, we propose a chatbot that detects ambiguity in user responses and generates Clarifying Questions (CQ) to collect precise information.
 
 
-## File
+## File Structure
+```bash
 .
 ├── scripts/
 │   ├── prompt_templates.yaml      # Task-specific prompt templates
@@ -28,3 +29,4 @@ Therefore, we propose a chatbot that detects ambiguity in user responses and gen
 
 ├── data/                          # Dataset files
 └── README.md
+```
