@@ -163,7 +163,7 @@ ChatGPT와 같은 LLM은 문서 작성에 도움을 줄 수 있지만 여전히 
   
   <img src = "Img/performance2.png">
 
-  <img src = "Img/casestudy.png">
+  <img src = "Img/case_study.png">
 
 ## Conclusion
   - 본 프로젝트는 사용자의 애매한 응답을 정확히 구체화하는 도메인 문서 작성 Chatbot을 제안하였다.
