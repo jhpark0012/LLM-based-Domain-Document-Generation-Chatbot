@@ -56,6 +56,7 @@ Our approach consists of three main steps:
 Through this process, we aim to develop a chatbot that efficiently clarifies ambiguous inputs and accurately completes complex domain documents.
 
 ## Method
+
 1. Synthetic Data Construction (AA, CQ)
 
 본 연구에서는 도메인 문서 작성 과정에서 발생하는 **사용자 응답의 애매함(Ambiguity)**을 모델링하기 위해 합성 데이터셋을 구축하였다.
@@ -102,3 +103,19 @@ A: 돈을 다른 사람에게 넘기는 그런 경우
 * 미흡한 경우 피드백을 반영하여 재생성
 
 이 과정을 반복함으로써 통제된 품질의 애매한 응답 데이터를 구축하였다.
+
+
+(3) Golden Clarifying Question (CQ)
+
+애매한 답변이 주어졌을 때 이를 구체화할 수 있는 **정답 Clarifying Question(CQ)**을 생성하였다.
+
+예시
+
+Ambiguous Answer: 돈을 다른 사람에게 넘기는 그런 경우
+
+Golden CQ: 혹시 ‘채권양도금’을 말씀하시는 건가요?
+
+<img src = "Img/cq_feedback_loop.png">
+
+
+CQ 데이터 또한 동일한 Feedback-Loop 과정을 통해 생성하였다.
