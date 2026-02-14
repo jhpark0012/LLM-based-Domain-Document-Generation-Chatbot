@@ -2,14 +2,13 @@
 한양대학교 첨단제조산학협력프로젝트
 
 ## Background
-In modern society, legal and administrative documents are essential, yet difficult for non-experts to write. Many users struggle with complex requirements, receive repeated revision requests, and restart the process multiple times.
+현대 사회에서 법률 및 행정 문서는 필수적이지만, 일반 시민들에게는 여전히 작성이 어렵다. 많은 사용자들이 복잡한 작성 요건을 이해하지 못해 어려움을 겪고, 반복적인 수정 요청을 받으며 문서를 여러 차례 다시 작성하게 된다.
 
-Although LLMs like ChatGPT can help, they have limitations. They often fail to handle ambiguous user responses properly, may generate inaccurate legal content, and lack structured clarification mechanisms.
+ChatGPT와 같은 LLM은 문서 작성에 도움을 줄 수 있지만 여전히 한계도 존재한다. 사용자의 애매한 응답을 적절히 처리하지 못하고, 법률 문서에서 부정확한 내용을 생성할 수 있으며, 체계적인 구체화(clarification) 메커니즘이 부족하다.
 
-In legal domains such as civil complaints, users frequently provide vague answers due to limited domain knowledge.
+특히 민사소송과 같은 법률 도메인에서는 사용자가 전문 지식 부족으로 인해 애매한 답변을 제공하는 경우가 빈번하다.
 
-Therefore, we propose a chatbot that detects ambiguity in user responses and generates Clarifying Questions (CQ) to collect precise information.
-
+이에 따라 우리는 사용자의 응답에서 애매함을 감지하고, 정확한 정보를 수집하기 위해 Clarifying Question(CQ)을 생성하는 챗봇을 제안한다.
 
 ## File Structure
 ```bash
@@ -31,29 +30,31 @@ Therefore, we propose a chatbot that detects ambiguity in user responses and gen
 ```
 
 ## Problem Definition
-We focus on building a chatbot that can handle ambiguous user responses in domain-specific document writing.
+우리는 도메인 특화 문서 작성 과정에서 발생하는 사용자의 애매한 응답을 처리할 수 있는 챗봇 개발에 초점을 맞추고 있다.
 
-Our approach consists of three main steps:
+우리의 접근 방식은 다음과 같은 세 단계로 구성된다.
 
-1) Construct synthetic datasets for the task
+1. 과업에 필요한 합성 데이터셋 구축
 
-    - Generate Ambiguous Answers (AA)
+ - Ambiguous Answer(AA) 생성
+   
+ - 이에 대응하는 Clarifying Question(CQ) 생성
 
-    - Generate corresponding Clarifying Questions (CQ)
+2. 모델 학습 및 성능 평가
+   
+  - 합성 데이터셋을 활용한 Supervised Fine-Tuning(SFT) 수행
+    
+  - Baselines 기법과의 성능 비교
+    
+3. 실제 문서 작성 시뮬레이션 수행
+   
+  - 문서 완성 속도 평가
+    
+  - 정확도 및 구체화(clarification) 품질 측정
 
-2) Train and evaluate the model
+이 과정을 통해 우리는 애매한 입력을 효과적으로 구체화하고, 복잡한 도메인 문서를 정확하게 완성할 수 있는 챗봇을 개발하고자 한다.
 
-    - Fine-tune the model using the synthetic dataset (SFT)
-
-    - Compare performance against baseline methods
-
-3) Conduct real document-writing simulation
-
-    - Evaluate document completion speed
-
-    - Measure accuracy and clarification quality
-
-Through this process, we aim to develop a chatbot that efficiently clarifies ambiguous inputs and accurately completes complex domain documents.
+<img src = "Img/overall_pipeline.png">
 
 ## Method
 
