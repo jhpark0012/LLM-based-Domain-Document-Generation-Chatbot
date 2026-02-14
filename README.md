@@ -70,17 +70,17 @@ ChatGPT와 같은 LLM은 문서 작성에 도움을 줄 수 있지만 여전히 
 
 특히 도메인 질문의 경우, 법률 지식이 부족한 사용자는 애매한 표현으로 응답할 가능성이 높다. 이를 모델링하기 위해 다음 데이터를 구축하였다.
 
-(1) Golden Answer (GA)
+#### (1) Golden Answer (GA)
 
   - 각 도메인 질문에 대해 명확하고 정답에 해당하는 Golden Answer를 정의하였다.
 
-  - 예시
   ```bash
+  예시
   Q: 사건명을 작성해주세요
   A: 채권양도금
   ```
   
-(2) Ambiguous Answer (AA)
+#### (2) Ambiguous Answer (AA)
   
   - 비전문가 사용자의 응답을 모사하기 위해 LLM을 활용하여 **애매한 답변(Ambiguous Answer)**을 생성하였다.
     
@@ -98,11 +98,12 @@ ChatGPT와 같은 LLM은 문서 작성에 도움을 줄 수 있지만 여전히 
   A: 돈을 다른 사람에게 넘기는 그런 경우
   ```
 
-(3) Golden Clarifying Question (CQ)
+#### (3) Golden Clarifying Question (CQ)
 
   - 애매한 답변이 주어졌을 때 이를 구체화할 수 있는 **Golden Clarifying Question(CQ)**을 생성하였다.
   - CQ 데이터 또한 동일한 Feedback-Loop 과정을 통해 생성하였다.
   <img src = "Img/cq_feedback_loop.png">
+  
   ```bash
   예시
   Ambiguous Answer: 돈을 다른 사람에게 넘기는 그런 경우
