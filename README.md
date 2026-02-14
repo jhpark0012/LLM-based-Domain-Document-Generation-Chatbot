@@ -11,7 +11,7 @@ ChatGPT와 같은 LLM은 문서 작성에 도움을 줄 수 있지만 여전히 
 이에 따라 우리는 사용자의 응답에서 애매함을 감지하고, 정확한 정보를 수집하기 위해 Clarifying Question(CQ)을 생성하는 챗봇을 제안한다.
 
 ## File Structure
-```bash
+```
 .
 ├── scripts/
 │   ├── prompt_templates.yaml      # Task-specific prompt templates
@@ -74,7 +74,7 @@ ChatGPT와 같은 LLM은 문서 작성에 도움을 줄 수 있지만 여전히 
 
   - 각 도메인 질문에 대해 명확하고 정답에 해당하는 Golden Answer를 정의하였다.
 
-  ```bash
+  ```
   예시
   Q: 사건명을 작성해주세요
   A: 채권양도금
@@ -90,23 +90,28 @@ ChatGPT와 같은 LLM은 문서 작성에 도움을 줄 수 있지만 여전히 
 
   - 이 과정을 반복함으로써 높은 품질의 애매한 응답 데이터를 구축하였다.
 
-  <img src = "Img/aa_feedback_loop.png">
-  
-  ```bash
+  ```
   예시
   Q: 사건명을 작성해주세요
   A: 돈을 다른 사람에게 넘기는 그런 경우
   ```
 
+  <img src = "Img/aa_feedback_loop.png">
+  
+
+
 #### (3) Golden Clarifying Question (CQ)
 
   - 애매한 답변이 주어졌을 때 이를 구체화할 수 있는 **Golden Clarifying Question(CQ)**을 생성하였다.
   - CQ 데이터 또한 동일한 Feedback-Loop 과정을 통해 생성하였다.
-  <img src = "Img/cq_feedback_loop.png">
-  
-  ```bash
+
+  ```
   예시
   Ambiguous Answer: 돈을 다른 사람에게 넘기는 그런 경우
   Golden CQ: 혹시 ‘채권양도금’을 말씀하시는 건가요?
   ```
+    
+  <img src = "Img/cq_feedback_loop.png">
+  
+  
 
