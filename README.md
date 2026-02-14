@@ -40,13 +40,13 @@ ChatGPT와 같은 LLM은 문서 작성에 도움을 줄 수 있지만 여전히 
    
  - 이에 대응하는 Clarifying Question(CQ) 생성
 
-### 2. 모델 학습 및 성능 평가
+### 2. Modeling
    
   - 합성 데이터셋을 활용한 Supervised Fine-Tuning(SFT) 수행
     
   - Baselines 기법과의 성능 비교
     
-### 3. 실제 문서 작성 시뮬레이션 수행
+### 3. Document-writing Simulation
    
   - 문서 완성 속도 평가
     
@@ -112,6 +112,27 @@ ChatGPT와 같은 LLM은 문서 작성에 도움을 줄 수 있지만 여전히 
   ```
     
   <img src = "Img/cq_feedback_loop.png">
-  
-  
+
+### 2. Modeling
+
+#### Training
+  - Dataset : Train : Validation : Test = 1,176 : 196 : 196
+  - 학습 방식 : Supervised Fine-Tuning (SFT)
+  - 학습 모델 : gpt-4o-mini
+  - Input : 질문 + 사용자 답변
+  - Ouput : Ambiguity Classification + (답변이 애매할 경우) CQ 생성
+
+#### Baselines
+  - 5-shot : 5개의 예시를 참고하여 문제를 푸는 Prompt Engineering 기법
+  - CoT : 단계별 추론으로 문제를 풀어 더 논리적인 답변을 생성하는 Prompt Engineering 기법
+
+#### Evaluation 
+  - F1-score : 사용자의 답변이 애매한지 정확히 분류하는지 평가
+  - BERTScore : Golden CQ와의 문맥적 유사도 평가
+  - LLM-as-Judge : 연관성(Relevance), 전문성(Knowledgeable), 자연스러움(Naturalness), 친화도(Engagingness) 평가 (1~10점)
+
+    <img src = "Img/performance.png">
+
+### 3. Document-writing Simulation
+
 
