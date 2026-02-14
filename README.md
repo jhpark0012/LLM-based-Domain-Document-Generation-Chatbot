@@ -134,5 +134,39 @@ ChatGPT와 같은 LLM은 문서 작성에 도움을 줄 수 있지만 여전히 
     <img src = "Img/performance.png">
 
 ### 3. Document-writing Simulation
+모델의 실제 서비스 적용 가능성을 검증하기 위해, 실제 사용자의 애매한 답변을 기반으로 한 문서 작성 시뮬레이션을 수행하였다.
 
+#### Experimental Setup
 
+  - 대상: 한양대학교 학부생 11명
+
+  - 평균 법률 지식 수준: 3.1 / 10
+
+#### Simulation Process
+
+  - 1) Chatbot이 문서 항목 질문
+
+  - 2) Agent가 학생의 실제 답변을 그대로 입력
+
+  - 3) 모델이 답변의 애매함 여부 판단
+
+  - 4) 애매한 경우: 구체화된 선택지 5개 생성
+
+  - 5) Agent는 Golden Answer 기준으로 가장 적절한 선택지 선택
+
+  - 5-1) 적절한 선택지가 없을 경우: “없음” 선택 -> 모델이 새로운 선택지 5개 재생성
+
+#### Evaluation
+  - Exact Match (EM) : 사용자의 명확한 답변을 그대로 정확히 반영했는지 평가 (일반 질문 정확도)
+  - BERTScore & LLM-as-Judge (1~10점 평가) : Golden Answer 대비 문맥적 유사도 및 전문성 평가 (도메인 질문 구체화 품질)
+  - Number of Hops : 문서 완성까지 필요한 대화 횟수 (문서 작성 효율성)
+  
+  <img src = "Img/performance2.png">
+
+  <img src = "Img/casestudy.png">
+
+## Conclusion
+  - 본 프로젝트는 사용자의 애매한 응답을 정확히 구체화하는 도메인 문서 작성 Chatbot을 제안하였다.
+  - LLM 기반 데이터 생성과 Self-Improvement 학습 구조를 통해 애매함 탐지 및 Clarifying Question 생성 성능을 효과적으로 향상시켰다.
+  - 실험 및 실제 사용자 시뮬레이션 결과, 기존 방식 대비 더 정확하고 빠르게 문서를 완성할 수 있음을 확인하였다.
+  - 본 접근 방식은 향후 행정·법률 문서 자동화 등 다양한 도메인으로 확장 가능하다.
