@@ -34,19 +34,19 @@ ChatGPT와 같은 LLM은 문서 작성에 도움을 줄 수 있지만 여전히 
 
 우리의 접근 방식은 다음과 같은 세 단계로 구성된다.
 
-1. 과업에 필요한 합성 데이터셋 구축
+### 1. Synthetic Data Construction
 
  - Ambiguous Answer(AA) 생성
    
  - 이에 대응하는 Clarifying Question(CQ) 생성
 
-2. 모델 학습 및 성능 평가
+### 2. 모델 학습 및 성능 평가
    
   - 합성 데이터셋을 활용한 Supervised Fine-Tuning(SFT) 수행
     
   - Baselines 기법과의 성능 비교
     
-3. 실제 문서 작성 시뮬레이션 수행
+### 3. 실제 문서 작성 시뮬레이션 수행
    
   - 문서 완성 속도 평가
     
@@ -77,45 +77,35 @@ ChatGPT와 같은 LLM은 문서 작성에 도움을 줄 수 있지만 여전히 
   - 예시
   ```bash
   Q: 사건명을 작성해주세요
-  
   A: 채권양도금
   ```
   
 (2) Ambiguous Answer (AA)
   
   - 비전문가 사용자의 응답을 모사하기 위해 LLM을 활용하여 **애매한 답변(Ambiguous Answer)**을 생성하였다.
+    
+  - 데이터 품질을 확보하기 위해 Feedback-Loop 기반 생성 파이프라인을 설계하였다.
 
+  - 데이터 생성 LLM이 애매한 답변 생성 > 평가 LLM이 품질 및 적절성 평가 > 미흡한 경우 피드백을 반영하여 재생성
 
-예시
+  - 이 과정을 반복함으로써 높은 품질의 애매한 응답 데이터를 구축하였다.
 
-Q: 사건명을 작성해주세요
-
-A: 돈을 다른 사람에게 넘기는 그런 경우
-
-데이터 품질을 확보하기 위해 Feedback-Loop 기반 생성 파이프라인을 설계하였다.
-
-<img src = "Img/aa_feedback_loop.png">
-
-* 데이터 생성 LLM이 애매한 답변 생성
-
-* 평가 LLM이 품질 및 적절성 평가
-
-* 미흡한 경우 피드백을 반영하여 재생성
-
-이 과정을 반복함으로써 통제된 품질의 애매한 응답 데이터를 구축하였다.
-
+  <img src = "Img/aa_feedback_loop.png">
+  
+  ```bash
+  예시
+  Q: 사건명을 작성해주세요
+  A: 돈을 다른 사람에게 넘기는 그런 경우
+  ```
 
 (3) Golden Clarifying Question (CQ)
 
-애매한 답변이 주어졌을 때 이를 구체화할 수 있는 **정답 Clarifying Question(CQ)**을 생성하였다.
+  - 애매한 답변이 주어졌을 때 이를 구체화할 수 있는 **Golden Clarifying Question(CQ)**을 생성하였다.
+  - CQ 데이터 또한 동일한 Feedback-Loop 과정을 통해 생성하였다.
+  <img src = "Img/cq_feedback_loop.png">
+  ```bash
+  예시
+  Ambiguous Answer: 돈을 다른 사람에게 넘기는 그런 경우
+  Golden CQ: 혹시 ‘채권양도금’을 말씀하시는 건가요?
+  ```
 
-예시
-
-Ambiguous Answer: 돈을 다른 사람에게 넘기는 그런 경우
-
-Golden CQ: 혹시 ‘채권양도금’을 말씀하시는 건가요?
-
-<img src = "Img/cq_feedback_loop.png">
-
-
-CQ 데이터 또한 동일한 Feedback-Loop 과정을 통해 생성하였다.
