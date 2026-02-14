@@ -37,20 +37,20 @@ Our approach consists of three main steps:
 
 1) Construct synthetic datasets for the task
 
-  * Generate Ambiguous Answers (AA)
+  - Generate Ambiguous Answers (AA)
 
-  * Generate corresponding Clarifying Questions (CQ)
+  - Generate corresponding Clarifying Questions (CQ)
 
 2) Train and evaluate the model
 
-  * Fine-tune the model using the synthetic dataset (SFT)
+  - Fine-tune the model using the synthetic dataset (SFT)
 
-  * Compare performance against baseline methods
+  - Compare performance against baseline methods
 
 3) Conduct real document-writing simulation
 
-  * Evaluate document completion speed
+  - Evaluate document completion speed
 
-  * Measure accuracy and clarification quality
+  - Measure accuracy and clarification quality
 
 Through this process, we aim to develop a chatbot that efficiently clarifies ambiguous inputs and accurately completes complex domain documents.
