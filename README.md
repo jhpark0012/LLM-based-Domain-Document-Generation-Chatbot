@@ -60,7 +60,7 @@ ChatGPT와 같은 LLM은 문서 작성에 도움을 줄 수 있지만 여전히 
 
 ### 1. Synthetic Data Construction (AA, CQ)
 
-본 연구에서는 도메인 문서 작성 과정에서 발생하는 **사용자 응답의 애매함(Ambiguity)**을 모델링하기 위해 합성 데이터셋을 구축하였다.
+본 연구에서는 도메인 문서 작성 과정에서 발생하는 **사용자 응답의 애매함(Ambiguity)** 을 모델링하기 위해 합성 데이터셋을 구축하였다.
 
 실험 도메인으로는 민사소송 소장을 선정하였다. 소장은 다음과 같은 두 유형의 질문으로 구성된다.
 
@@ -82,7 +82,7 @@ ChatGPT와 같은 LLM은 문서 작성에 도움을 줄 수 있지만 여전히 
   
 #### (2) Ambiguous Answer (AA)
   
-  - 비전문가 사용자의 응답을 모사하기 위해 LLM을 활용하여 **애매한 답변(Ambiguous Answer)**을 생성하였다.
+  - 비전문가 사용자의 응답을 모사하기 위해 LLM을 활용하여 **애매한 답변(Ambiguous Answer)** 을 생성하였다.
     
   - 데이터 품질을 확보하기 위해 Feedback-Loop 기반 생성 파이프라인을 설계하였다.
 
@@ -102,7 +102,7 @@ ChatGPT와 같은 LLM은 문서 작성에 도움을 줄 수 있지만 여전히 
 
 #### (3) Golden Clarifying Question (CQ)
 
-  - 애매한 답변이 주어졌을 때 이를 구체화할 수 있는 **Golden Clarifying Question(CQ)**을 생성하였다.
+  - 애매한 답변이 주어졌을 때 이를 구체화할 수 있는 **Golden Clarifying Question(CQ)** 을 생성하였다.
   - CQ 데이터 또한 동일한 Feedback-Loop 과정을 통해 생성하였다.
 
   ```
