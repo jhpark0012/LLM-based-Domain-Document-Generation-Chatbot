@@ -1,10 +1,17 @@
 # LLM-based Domain Document Generation Chatbot
 - 협업 기업 : Markr.AI
 
-- 한양대학교 첨단제조산학협력프로젝트경진대회 3rd place 🥉
-  
+- 한양대학교 첨단제조산학협력프로젝트경진대회 3rd place 🥉 (한양대학교 총장상)
+
 ## Period
 25.03.02 ~ 25.12.19
+
+## Overview
+- 민사 소장 작성 과정에서 모호한 사용자 입력을 적절히 처리하지 못하는 기존 LLM 기반 챗봇의 한계를, 모호성 인지 기반 질의(clarification) 메커니즘을 도입하여 개선
+
+- Feedback-loop 기반 데이터 생성 파이프라인을 구축하여 고품질의 모호 응답(Ambiguous Answer)과 명확화 질문(Clarifying Question) 생성 후, GPT-4o-mini supervised fine-tuning
+- 기존 prompt engineering 방식 대비 Macro-F1 94.57%(+8.8%p), **BERTScore 89%(+4.07%p)** 달성
+
 
 ## Background
 현대 사회에서 법률 및 행정 문서는 필수적이지만, 일반 시민들에게는 여전히 작성이 어렵다. 많은 사용자들이 복잡한 작성 요건을 이해하지 못해 어려움을 겪고, 반복적인 수정 요청을 받으며 문서를 여러 차례 다시 작성하게 된다.
