@@ -26,10 +26,10 @@
 ```
 
 ## Overview
-- 민사 소장 작성 과정에서 모호한 사용자 입력을 적절히 처리하지 못하는 기존 LLM 기반 챗봇의 한계를, 모호성 인지 기반 질의(clarification) 메커니즘을 도입하여 개선
+- 민사 소장 작성 과정에서 모호한 사용자 입력을 적절히 처리하지 못하는 기존 LLM 기반 챗봇의 한계를, 모호성 인지 기반 질의(clarification) 메커니즘을 도입하여 개선하였다.
 
 - Feedback-loop 기반 데이터 생성 파이프라인을 구축하여 고품질의 모호 응답(Ambiguous Answer)과 명확화 질문(Clarifying Question) 생성 후, GPT-4o-mini supervised fine-tuning
-- 기존 prompt engineering 방식 대비 Macro-F1 94.57%(+8.8%p), **BERTScore 89%(+4.07%p)** 달성
+- 기존 prompt engineering 방식 대비 Macro-F1 94.57%(+8.8%p), **BERTScore 89%(+4.07%p)** 달성했다.
 
 
 ## Background
@@ -44,9 +44,9 @@ ChatGPT와 같은 LLM은 문서 작성에 도움을 줄 수 있지만 여전히 
 
 ## Problem Definition
 
-  - 우리는 도메인 특화 문서 작성 과정에서 발생하는 사용자의 애매한 응답을 처리할 수 있는 챗봇 개발에 초점을 맞추고 있다.
+  - 도메인 특화 문서 작성 과정에서 발생하는 사용자의 애매한 응답을 처리할 수 있는 챗봇 개발에 초점을 맞춘다.
  
-  - 우리의 접근 방식은 다음과 같은 세 단계로 구성된다.
+  - 본 프로젝트는 다음과 같은 세 단계로 구성된다.
 
 ### 1. Synthetic Data Construction
 
