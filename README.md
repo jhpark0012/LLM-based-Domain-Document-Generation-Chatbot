@@ -6,22 +6,6 @@
 ## Period
 25.03.02 ~ 25.12.19
 
-## Overview
-- 민사 소장 작성 과정에서 모호한 사용자 입력을 적절히 처리하지 못하는 기존 LLM 기반 챗봇의 한계를, 모호성 인지 기반 질의(clarification) 메커니즘을 도입하여 개선
-
-- Feedback-loop 기반 데이터 생성 파이프라인을 구축하여 고품질의 모호 응답(Ambiguous Answer)과 명확화 질문(Clarifying Question) 생성 후, GPT-4o-mini supervised fine-tuning
-- 기존 prompt engineering 방식 대비 Macro-F1 94.57%(+8.8%p), **BERTScore 89%(+4.07%p)** 달성
-
-
-## Background
-현대 사회에서 법률 및 행정 문서는 필수적이지만, 일반 시민들에게는 여전히 작성이 어렵다. 많은 사용자들이 복잡한 작성 요건을 이해하지 못해 어려움을 겪고, 반복적인 수정 요청을 받으며 문서를 여러 차례 다시 작성하게 된다.
-
-ChatGPT와 같은 LLM은 문서 작성에 도움을 줄 수 있지만 여전히 한계도 존재한다. 사용자의 애매한 응답을 적절히 처리하지 못하고, 법률 문서에서 부정확한 내용을 생성할 수 있으며, 체계적인 구체화(clarification) 메커니즘이 부족하다.
-
-특히 민사소송과 같은 법률 도메인에서는 사용자가 전문 지식 부족으로 인해 애매한 답변을 제공하는 경우가 빈번하다.
-
-이에 따라 우리는 사용자의 응답에서 애매함을 감지하고, 정확한 정보를 수집하기 위해 Clarifying Question(CQ)을 생성하는 챗봇을 제안한다.
-
 ## File Structure
 ```
 .
@@ -40,6 +24,23 @@ ChatGPT와 같은 LLM은 문서 작성에 도움을 줄 수 있지만 여전히 
 ├── data/                          # Dataset files
 └── README.md
 ```
+
+## Overview
+- 민사 소장 작성 과정에서 모호한 사용자 입력을 적절히 처리하지 못하는 기존 LLM 기반 챗봇의 한계를, 모호성 인지 기반 질의(clarification) 메커니즘을 도입하여 개선
+
+- Feedback-loop 기반 데이터 생성 파이프라인을 구축하여 고품질의 모호 응답(Ambiguous Answer)과 명확화 질문(Clarifying Question) 생성 후, GPT-4o-mini supervised fine-tuning
+- 기존 prompt engineering 방식 대비 Macro-F1 94.57%(+8.8%p), **BERTScore 89%(+4.07%p)** 달성
+
+
+## Background
+현대 사회에서 법률 및 행정 문서는 필수적이지만, 일반 시민들에게는 여전히 작성이 어렵다. 많은 사용자들이 복잡한 작성 요건을 이해하지 못해 어려움을 겪고, 반복적인 수정 요청을 받으며 문서를 여러 차례 다시 작성하게 된다.
+
+ChatGPT와 같은 LLM은 문서 작성에 도움을 줄 수 있지만 여전히 한계도 존재한다. 사용자의 애매한 응답을 적절히 처리하지 못하고, 법률 문서에서 부정확한 내용을 생성할 수 있으며, 체계적인 구체화(clarification) 메커니즘이 부족하다.
+
+특히 민사소송과 같은 법률 도메인에서는 사용자가 전문 지식 부족으로 인해 애매한 답변을 제공하는 경우가 빈번하다.
+
+이에 따라 우리는 사용자의 응답에서 애매함을 감지하고, 정확한 정보를 수집하기 위해 Clarifying Question(CQ)을 생성하는 챗봇을 제안한다.
+
 
 ## Problem Definition
 
