@@ -1,7 +1,10 @@
-# LLM-based Domain Document Generation Chatbot<br>
-(ClarifyDocs: 사용자 응답 명확화를 통한 도메인 문서 자동 작성)
+<h1>
+  LLM-based Domain Document Generation Chatbot<br>
+  <sub>ClarifyDocs: 사용자 응답 명확화를 통한 도메인 문서 자동 작성</sub>
+</h1>
 
-- 협업 기업: Markr.AI
+- **협업 기업:** Markr.AI
+
 
 - 한양대학교 첨단제조산학협력프로젝트경진대회 3rd place 🥉 (한양대학교 총장상)
 
