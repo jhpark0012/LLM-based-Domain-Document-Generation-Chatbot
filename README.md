@@ -1,6 +1,6 @@
 <h1>
   LLM-based Domain Document Generation Chatbot<br>
-  <sub>ClarifyDocs: 사용자 응답 명확화를 통한 도메인 문서 자동 작성</sub>
+  <sub>(ClarifyDocs: 사용자 응답 명확화를 통한 도메인 문서 자동 작성)</sub>
 </h1>
 
 - **협업 기업:** Markr.AI
